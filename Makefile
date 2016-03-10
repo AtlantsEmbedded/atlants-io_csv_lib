@@ -16,7 +16,7 @@ TARGET2       = lib$(LIBBASENAME).so.$(MAJVER).$(MINVER)
 
 ####### Compiler, tools and options
 LD	      := $(CC)
-CC            := $(CC)
+CC            := gcc
 CXX           := $(CXX)
 LEX           := flex
 YACC          := yacc
@@ -27,6 +27,29 @@ YACCFLAGS     := -d
 INCPATH       := -I$(STAGING_DIR)/include -I$(STAGING_DIR)/usr/include -I./include/
 LINK          := $(CC) 
 LFLAGS        := -shared -Wl,-soname,$(TARGET)
+
+
+ifeq ($(ARCH), arm)
+	ARCH_LIBS = -lwiringPi -lwiringPiDev
+	RASPI_DEFINES  =-DRASPI=1
+	INCPATH       = -I. \
+                -I./include/ \
+                -I$(STAGING_DIR)/include \
+                -I$(STAGING_DIR)/usr/include
+	CFLAGS=$(TARGET_CFLAGS) -Wall -fPIC $(CFLAGS) -W  $(DEFINES) $(X86_DEFINES) $(RASPI_DEFINES)
+else ifeq ($(ARCH), x86)
+	ARCH_LIBS 	  =
+	X86_DEFINES   =-DX86=1 -g
+	INCPATH       = -I. \
+               		-Iinclude
+else 
+	ARCH_LIBS 	  =
+	X86_DEFINES   =-DX86=1 -g
+	INCPATH       = -I. \
+               		-Iinclude
+endif
+
+
 LIBS          :=-L$(STAGING_DIR)/lib -L$(STAGING_DIR)/usr/lib -lm -lrt
 AR            := ar
 AR_ARGS	      := cqs	
@@ -51,7 +74,7 @@ OBJECTS_DIR   = ./
 
 ####### Files
 
-SOURCES       = src/csv_file.csv
+SOURCES       = src/csv_file.c
 		
 OBJECTS       = csv_file.o
 
@@ -103,8 +126,8 @@ distclean: clean
 
 ####### Compile
 
-stats_lib.o: src/csv_file.c 
-	$(CC) -c $(CCFLAGS) $(INCPATH) -o csv_file.o src/csv_file.c
+csv_file.o: src/csv_file.c 
+	$(CC) -c $(CFLAGS) $(INCPATH) -o csv_file.o src/csv_file.c
 
 ####### dependencies
 

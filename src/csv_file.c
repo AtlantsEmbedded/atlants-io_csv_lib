@@ -8,17 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "feature_output.h"
-#include "data_structure.h"
 #include "csv_file.h"
-
-/*Define the csv structure*/
-typedef struct csv_output_s {
-
-	csv_output_options_t options;
-	FILE *fp;
-
-} csv_output_t;
 
 /**
  * void* csv_init_file(void *options)
@@ -39,8 +29,9 @@ void *csv_init_file(void *options)
 	this_csv->fp = fopen(this_csv->options.filename, "w+");
 
 	/*check if opened correctly */
-	if (this_csv->fp == NULL)
+	if (this_csv->fp == NULL) {
 		return NULL;
+	}
 
 	/*return the pointer */
 	return this_csv;
@@ -63,8 +54,9 @@ int csv_write_in_file(void *feature_buf, void *csv_interface)
 	double *double_buf = (double *)data->ptr;
 
 	/*check if file valid */
-	if (this_csv->fp == NULL)
+	if (this_csv->fp == NULL) {
 		return EXIT_FAILURE;
+	}
 
 	/*write feature vector to csv file */
 	for (i = 0; i < data->nb_data; i++) {
@@ -90,8 +82,9 @@ int csv_close_file(void *csv_interface)
 	csv_output_t *this_csv = (csv_output_t *) csv_interface;
 
 	/*check if file is valid */
-	if (this_csv->fp == NULL)
+	if (this_csv->fp == NULL) {
 		return EXIT_FAILURE;
+	}
 
 	/*close and free the interface memory */
 	fclose(this_csv->fp);
