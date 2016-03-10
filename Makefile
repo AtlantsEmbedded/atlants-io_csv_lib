@@ -30,13 +30,13 @@ LFLAGS        := -shared -Wl,-soname,$(TARGET)
 
 
 ifeq ($(ARCH), arm)
-	ARCH_LIBS = -lwiringPi -lwiringPiDev
+	ARCH_LIBS = 
 	RASPI_DEFINES  =-DRASPI=1
 	INCPATH       = -I. \
                 -I./include/ \
                 -I$(STAGING_DIR)/include \
                 -I$(STAGING_DIR)/usr/include
-	CFLAGS=$(TARGET_CFLAGS) -Wall -fPIC $(CFLAGS) -W  $(DEFINES) $(X86_DEFINES) $(RASPI_DEFINES)
+	CFLAGS=$(TARGET_CFLAGS) -Wall -fPIC -W  $(DEFINES) $(X86_DEFINES) $(RASPI_DEFINES)
 else ifeq ($(ARCH), x86)
 	ARCH_LIBS 	  =
 	X86_DEFINES   =-DX86=1 -g
