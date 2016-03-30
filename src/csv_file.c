@@ -44,27 +44,58 @@ void *csv_init_file(void *options)
  * @param csv_interface, (csv_output_t*) pointer to the csv interface
  * @return if successful, EXIT_SUCCESS, otherwise, EXIT_FAILURE
  */
-int csv_write_in_file(void *feature_buf, void *csv_interface)
+int csv_write_in_file(void *csv_file_ptr, void *input)
 {
 
 	int i;
 	/*recast pointers */
-	data_t *data = (data_t *) feature_buf;
-	csv_output_t *this_csv = (csv_output_t *) csv_interface;
-	double *double_buf = (double *)data->ptr;
+	data_t *data = (data_t *) input;
+	csv_output_t *this_csv = (csv_output_t *) csv_file_ptr;
+	
+	
+	if(this_csv->options.data_type==DOUBLE_DATA){
+		
+		double *data_buf = (double *)data->ptr;
 
-	/*check if file valid */
-	if (this_csv->fp == NULL) {
-		return EXIT_FAILURE;
+		/*check if file valid */
+		if (this_csv->fp == NULL) {
+			return EXIT_FAILURE;
+		}
+
+		/*write feature vector to csv file */
+		for (i = 0; i < data->nb_data; i++) {
+			fprintf(this_csv->fp, "%lf;", data_buf[i]);
+		}
+
+		/*skip a line */
+		fprintf(this_csv->fp, "\n");
 	}
+	else if(this_csv->options.data_type==FLOAT_DATA){
+		
+		float *data_buf = (float *)data->ptr;
 
-	/*write feature vector to csv file */
-	for (i = 0; i < data->nb_data; i++) {
-		fprintf(this_csv->fp, "%f;", double_buf[i]);
+		printf("About to write\n");
+		
+		/*check if file valid */
+		if (this_csv->fp == NULL) {
+			return EXIT_FAILURE;
+		}
+		
+		printf("Writing in file\n");
+		printf("Nb data = %d\n",data->nb_data);
+
+		/*write feature vector to csv file */
+		for (i = 0; i < data->nb_data; i++) {
+			printf("%f;",data_buf[i]);
+			fprintf(this_csv->fp, "%f;", data_buf[i]);
+		}
+
+		/*skip a line */
+		printf("\n");
+		fprintf(this_csv->fp, "\n");
+		
+		fflush(this_csv->fp);
 	}
-
-	/*skip a line */
-	fprintf(this_csv->fp, "\n");
 
 	return EXIT_SUCCESS;
 }
