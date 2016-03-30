@@ -74,26 +74,18 @@ int csv_write_in_file(void *csv_file_ptr, void *input)
 		
 		float *data_buf = (float *)data->ptr;
 
-		printf("About to write\n");
-		
 		/*check if file valid */
 		if (this_csv->fp == NULL) {
 			return EXIT_FAILURE;
 		}
 		
-		printf("Writing in file\n");
-		printf("Nb data = %d\n",data->nb_data);
-
 		/*write feature vector to csv file */
 		for (i = 0; i < data->nb_data; i++) {
-			printf("%f;",data_buf[i]);
 			fprintf(this_csv->fp, "%f;", data_buf[i]);
 		}
 
 		/*skip a line */
-		printf("\n");
 		fprintf(this_csv->fp, "\n");
-		
 		fflush(this_csv->fp);
 	}
 
