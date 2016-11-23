@@ -30,6 +30,7 @@ void *csv_init_file(void *options)
 
 	/*check if opened correctly */
 	if (this_csv->fp == NULL) {
+        printf("File didn't opened correctly\n");
 		return NULL;
 	}
 
@@ -44,14 +45,10 @@ void *csv_init_file(void *options)
  * @param csv_interface, (csv_output_t*) pointer to the csv interface
  * @return if successful, EXIT_SUCCESS, otherwise, EXIT_FAILURE
  */
-int csv_write_in_file(void *csv_file_ptr, void *input)
+int csv_write_in_file(csv_output_t *this_csv, data_t *data)
 {
 
 	int i;
-	/*recast pointers */
-	data_t *data = (data_t *) input;
-	csv_output_t *this_csv = (csv_output_t *) csv_file_ptr;
-	
 	
 	if(this_csv->options.data_type==DOUBLE_DATA){
 		
@@ -69,6 +66,7 @@ int csv_write_in_file(void *csv_file_ptr, void *input)
 
 		/*skip a line */
 		fprintf(this_csv->fp, "\n");
+		fflush(this_csv->fp);
 	}
 	else if(this_csv->options.data_type==FLOAT_DATA){
 		

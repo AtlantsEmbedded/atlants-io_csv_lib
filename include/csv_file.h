@@ -30,12 +30,12 @@ typedef struct csv_output_s {
 
 /** defines the data structure that contains the data to be sent*/
 typedef struct data_s {
-	void *ptr;
 	int nb_data;
+	void *ptr;
 } data_t;
 
 void *csv_init_file(void *param);
-int csv_write_in_file(void *csv_interface, void *input);
+int csv_write_in_file(csv_output_t *this_csv, data_t *data);
 int csv_close_file(void *csv_interface);
 
 #endif
